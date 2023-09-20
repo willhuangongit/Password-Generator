@@ -21,7 +21,7 @@ st.set_page_config(
     layout = "wide"
 )
 st.title('Random Password Generator')
-st.subheader('Randomly generate a password according to your custom criteria.')
+st.subheader('Randomly generate a password according to your criteria.')
 col1, col2, col3 = st.columns(3, gap = 'medium')
 
 
@@ -175,8 +175,29 @@ with col3:
         type = 'primary',
     )
 
-    if generate and pass_special_character:
-        st.text(g.generate())
-    elif  generate and not pass_special_character:
-        st.write(':red[Please resolve the issues with special character '
-                 'settings and try again.]')
+    # Check if at least some symbols are allowed.
+    if all([
+        g.include_upper_case == 'never',
+        g.include_lower_case == 'never',
+        g.include_digits == 'never',
+        g.include_special_characters == 'never',
+    ]):
+        st.write('Please change the setting to allow symbols to be included in the password.')
+
+    elif generate:
+
+        # Check if length is shorter than the required number of symbols.
+        n_must = sum([
+            g.include_upper_case == 'must',
+            g.include_lower_case == 'must',
+            g.include_digits == 'must',
+            g.include_special_characters == 'must',
+        ])
+        if g.length < n_must:
+            st.write(f'The length ({g.length}) is shorter than the minimum number of symbols that '
+                     f'must show up ({n_must}).')
+        elif pass_special_character:
+            st.text(g.generate())
+        elif not pass_special_character:
+            st.write(':red[Please resolve the issues with special character '
+                     'settings and try again.]')
