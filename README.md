@@ -29,7 +29,7 @@ Once the password criteria are set, click the "Generate" button and copy the gen
 
 **App Info**
 
-Version 2.0.0
+Version 1.0.0
 
 Created by Will Huang
 
