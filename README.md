@@ -27,6 +27,12 @@ you can also provide your own custom set of special symbols.
 
 Once the password criteria are set, click the "Generate" button and copy the generated password.
 
+**Additional Improvements in the Future**
+
+This app strives to be simple, but some nice-to-have improvements are sought after.
+- Have a "Copy to Clipboard" button that copies the created password to the user's clipboard.
+- Keep the previously generated password even when changing the password custimization options. Currently, the interface would erase the previous password whenever you select a different customization option.
+
 **App Info**
 
 Version 1.0.0
