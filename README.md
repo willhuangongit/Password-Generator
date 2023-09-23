@@ -9,6 +9,10 @@ requirements. The randomness will also make your password stronger and harder to
 
 # How to Use This App
 
+The app is deployed here:
+
+[https://random-password-generator.streamlit.app/](https://random-password-generator.streamlit.app/)
+
 In a typical password, there are 4 groups of symbols:
 
 - Upper-case English letters
