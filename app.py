@@ -20,6 +20,7 @@ st.set_page_config(
     page_title = 'Random Password Generator',
     layout = "wide"
 )
+st.caption('Created by Will Huang.')
 st.title('Random Password Generator')
 st.subheader('Randomly generate a password according to your criteria.')
 col1, col2, col3 = st.columns(3, gap = 'medium')
