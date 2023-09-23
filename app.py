@@ -29,6 +29,7 @@ col1, col2, col3 = st.columns(3, gap = 'medium')
 @st.cache_resource
 def _get_generator():
     return PasswordGenerator()
+g = _get_generator()
 
 # ===== ===== ===== ===== ===== ===== ===== =====
 # Password Options
