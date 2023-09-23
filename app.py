@@ -25,18 +25,10 @@ st.title('Random Password Generator')
 st.subheader('Randomly generate a password according to your criteria.')
 col1, col2, col3 = st.columns(3, gap = 'medium')
 
-
 # Create a password generator.
 @st.cache_resource
 def _get_generator():
     return PasswordGenerator()
-
-@st.cache_data
-def _get_output():
-    return ''
-
-g = _get_generator()
-output = _get_output()
 
 # ===== ===== ===== ===== ===== ===== ===== =====
 # Password Options
