@@ -107,7 +107,7 @@ with col2:
         key = 'special_character_range',
         options = ["Default", "Custom"],
         captions = [
-            f'Use the following ASCII characters:\n{punctuation}',
+            f'Use the following characters:\n{punctuation}',
             'Use your own custom list below.'
         ],
     )
