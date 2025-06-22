@@ -30,6 +30,7 @@ col1, col2, col3 = st.columns(3, gap = 'medium')
 def _get_generator():
     return PasswordGenerator()
 generator = _get_generator()
+password = ''
 
 # ===== ===== ===== ===== ===== ===== ===== =====
 # Password Options
@@ -156,6 +157,8 @@ with col2:
 # Generate password
 # ----- ----- ----- ----- ----- ----- ----- -----
 
+password = ''
+
 with col3:
 
     # Create a button for generating password.
@@ -184,7 +187,8 @@ with col3:
             st.write(f'The length ({generator.length}) is shorter than the minimum number of symbols that '
                      f'must show up ({n_must}).')
         elif pass_special_character:
-            st.text(generator.generate())
+            password = generator.generate()
+            st.code(password, width = 300, wrap_lines = True)
         elif not pass_special_character:
-            st.write(':red[Please resolve the issues with special character '
-                     'settings and try again.]')
+            st.write(':red[Please resolve the issues with special character settings and try again.]')
+
