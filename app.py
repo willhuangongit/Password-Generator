@@ -49,7 +49,7 @@ with col1:
     generator.length = st.number_input(
         label = '**Password Length**',
         min_value = 1,
-        value = 12,
+        value = 20,
         step = 1,
         format = '%d',
         key = 'length',
