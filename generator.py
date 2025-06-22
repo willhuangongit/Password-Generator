@@ -1,7 +1,7 @@
 # This module contains a class for generating a password
 # according to specified criteria.
 # Created by Will Huang
-# Version == 2.0.0
+# Version == 3.0.0
 
 # Dependency versions
 # Python == 3.10.10
@@ -16,10 +16,10 @@ class PasswordGenerator:
     def __init__(
         self,
         length = 10,
-        include_lower_case = 'must',
-        include_upper_case = 'must',
-        include_digits = 'must',
-        include_special_characters = 'random',
+        include_lower_case = True,
+        include_upper_case = True,
+        include_digits = True,
+        include_special_characters = True,
         custom_special_characters = None,
     ):
 
@@ -31,22 +31,17 @@ class PasswordGenerator:
         length: int
             The length of the password to generate.
 
-        include_lower_case: str
-            Determine whether lower-case English letters should be
-            included in the password.
-            - 'must': Must include at least one lower-case letter.
-            - 'never': Never include any lower-case letter.
-            - 'random': Randomly include any number of lower-case letter,
-              possibly no lower-case letter at all.
+        include_lower_case: bool
+            Determine whether lower-case English letters should be considered for the password.
 
-        include_upper_case: str
-            Similar to include_lower_case but for upper-case English letters.
+        include_upper_case: bool
+            Determine whether upper-case English letters should be considered for the password.
 
-        include_digits: str
-            Similar to include_lower_case but for digits from 0 to 9.
+        include_digits: bool
+            Determine whether digits from 0 to 9 should be considered for the password.
 
-        include_special_characters:
-            Similar to include_lower_case but for ASCII punctuation symbols.
+        include_special_characters: bool
+            Determine whether special characters should be considered for the password.
 
         custom_special_characters: None or str
             If the user prefers to use special symbols that are different from
@@ -92,47 +87,23 @@ class PasswordGenerator:
         return self.__length
 
     @property
-    def include_lower_case(self):
-        """
-        An indicator for how lower-case letters should appear
-        in the generated password.
-        - 'must': must include at least one lower-case letter.
-        - 'never': do not include any lower-case letter.
-        - 'random': decide randomly how many lower-case letters to include.
-        """
+    def include_lower_case(self) -> bool:
+        """An indicator for whether lower case English letters should appear in the generated password."""
         return self.__include_lower_case
 
     @property
-    def include_upper_case(self):
-        """
-        An indicator for how upper-case letters should appear
-        in the generated password.
-        - 'must': must include at least one upper-case letter.
-        - 'never': do not include any upper-case letter.
-        - 'random': decide randomly how many upper-case letters to include.
-        """
+    def include_upper_case(self) -> bool:
+        """An indicator for whether upper case English letters should appear in the generated password."""
         return self.__include_upper_case
 
     @property
-    def include_digits(self):
-        """
-        An indicator for how digits should appear
-        in the generated password.
-        - 'must': must include at least one digit.
-        - 'never': do not include any digit.
-        - 'random': decide randomly how many digits to include.
-        """
+    def include_digits(self) -> bool:
+        """An indicator for whether digits should appear in the generated password."""
         return self.__include_digits
 
     @property
-    def include_special_characters(self):
-        """
-        An indicator for how special characters should appear
-        in the generated password.
-        - 'must': must include at least one special character.
-        - 'never': do not include any special character.
-        - 'random': decide randomly how many special characters to include.
-        """
+    def include_special_characters(self) -> bool:
+        """An indicator for whether special characters should appear in the generated password."""
         return self.__include_special_characters
 
     # ===== ===== ===== ===== ===== ===== ===== =====
@@ -147,7 +118,7 @@ class PasswordGenerator:
         self.__generator = x
 
     @special_characters.setter
-    def special_characters(self, x):
+    def special_characters(self, x: str):
 
         # Check input.
         if not isinstance(x, str):
@@ -188,38 +159,26 @@ class PasswordGenerator:
 
     @include_lower_case.setter
     def include_lower_case(self, x):
-        if x not in ['must', 'never', 'random']:
-            raise ValueError(
-                f'include_lower_case should be "must", "never" or "random" '
-                f'instead of "{x}".'
-            )
+        if not isinstance(x, bool):
+            raise ValueError(f'include_lower_case should be boolean instead of {x}')
         self.__include_lower_case = x
 
     @include_upper_case.setter
     def include_upper_case(self, x):
-        if x not in ['must', 'never', 'random']:
-            raise ValueError(
-                f'include_upper_case should be "must", "never" or "random" '
-                f'instead of "{x}".'
-            )
+        if not isinstance(x, bool):
+            raise ValueError(f'include_upper_case should be boolean instead of {x}')
         self.__include_upper_case = x
 
     @include_digits.setter
     def include_digits(self, x):
-        if x not in ['must', 'never', 'random']:
-            raise ValueError(
-                f'include_digits should be "must", "never" '
-                f'or "random instead of "{x}".'
-            )
+        if not isinstance(x, bool):
+            raise ValueError(f'include_digits should be boolean instead of {x}')
         self.__include_digits = x
 
     @include_special_characters.setter
     def include_special_characters(self, x):
-        if x not in ['must', 'never', 'random']:
-            raise ValueError(
-                f'include_special_characters should be "must", "never" '
-                f'or "random instead of "{x}".'
-            )
+        if not isinstance(x, bool):
+            raise ValueError(f'include_special_characters should be boolean instead of {x}')
         self.__include_special_characters = x
 
     @property
@@ -278,110 +237,26 @@ class PasswordGenerator:
         """
 
         # ===== ===== ===== ===== ===== ===== ===== =====
-        # Create a function for drawing random samples
-        # with random length.
+        # Collect the set of all symbols to use.
         # ===== ===== ===== ===== ===== ===== ===== =====
 
-        def _get_variable_length_sample(
-            population, max_n: int, mode: str
-        ) -> tuple:
+        # Identify the symbols that must be included.
 
-            """
-            This function randomly decides a sample size, and then draw
-            a random sample (with replacement) whose size is the randomly-
-            decided sample size.
-
-            Parameters
-            ----------
-            population: iterable
-                The population from which to sample with replacement.
-
-            max_n: int
-                The largest sample size allowed.
-                This should be at least 1. However, no sample will be
-                returned if mode = 'never' (see below).
-
-            mode: str
-                This determines how many samples would be drawn randomly.
-                The permitted inputs are the following:
-                - 'must': The sample size is at least 1.
-                - 'never': The sample size is always zero.
-                - 'random': The sample size is at least 0.
-
-            Returns
-            -------
-            A list containing the random elements drawn from the population.
-            """
-
-            # Check inputs.
-            if not isinstance(max_n, int):
-                raise TypeError(f'max_n should be an integer instead of {type(max_n)}')
-            if max_n < 1:
-                raise ValueError(f'max_n should not be negative; it is currently {max_n}.')
-
-            # Determine the sample size.
-            if mode == 'must':
-                if max_n < 1:
-                    raise ValueError(f'When mode == "must", max_n should be at '
-                                     f'least 1 instead of {max_n}.')
-                k = self.generator.choice(range(1, max_n + 1))
-            elif mode == 'never':
-                k = 0
-            elif mode == 'random':
-                k = self.generator.choice(range(0, max_n + 1))
-            else:
-                raise ValueError(
-                    f'mode should be "must", "never" or "random" '
-                    f'instead of "{mode}".'
-                )
-
-            # Draw random sample from all possible symbols.
-            return self.generator.choices(population, k = k)
-
-        # ===== ===== ===== ===== ===== ===== ===== =====
-        # Draw samples
-        # ===== ===== ===== ===== ===== ===== ===== =====
-
-        # Identify the symbols that must be included in the
-        # password as well as those that can be optional.
-
-        must_groups = {
+        groups_to_include = {
             key: value for key, value in self.settings.items()
-            if value['Include'] == 'must'
+            if value['Include']
+            and len(value['Symbols']) > 0
         }
-
-        optional_groups = {
-            key: value for key, value in self.settings.items()
-            if (
-                (value['Include'] == 'random') and
-                (len(value['Symbols']) > 0)
-            )
-        }
-
-        # If special characters are included in must_groups,
-        # check if there is any symbol to sample from.
-        # This accounts for the possibility of customized
-        # special characters.
-        if (
-            ('Special Characters' in must_groups.keys()) and
-            (len(must_groups['Special Characters']['Symbols']) == 0)
-        ):
-            raise ValueError(
-                f'Special symbols should be included in the password, '
-                f'and yet there is no special symbol defined. '
-                f'Please change the settings by either providing '
-                f'special characters or not forcing them to be '
-                f'in the password.'
-            )
-
 
         # For the symbols that must be included, see if the
         # specified length is enough to contain them.
-        if (len(must_groups) > 0) and (self.length < len(must_groups)):
+        # For example, if the 3 categories of upper case, lower case and digits are all required,
+        # but that the maximum length of the password is 2, then raise an error.
 
-            # Create a wording for which symbol groups are
-            # required to be in the password.
-            musts_wording = [each.lower() for each in must_groups]
+        if (len(groups_to_include) > 0) and (self.length < len(groups_to_include)):
+
+            # Create a wording for which symbol groups are required to be in the password.
+            musts_wording = [each.lower() for each in groups_to_include]
             if len(musts_wording) == 1:
                 musts_wording = musts_wording[0]
             else:
@@ -389,7 +264,7 @@ class PasswordGenerator:
                                 ' and ' + musts_wording[-1]
 
             raise ValueError(
-                f'There are {len(must_groups)} types of symbols ({musts_wording}) '
+                f'There are {len(groups_to_include)} types of symbols ({musts_wording}) '
                 f'that should be included in the password, but the length of the '
                 f'password to generate is only {self.length}, which is not enough. '
                 f'Please change the password requirements.'
@@ -400,98 +275,42 @@ class PasswordGenerator:
         # ===== ===== ===== ===== ===== ===== ===== =====
 
         password = []
-        n_remaining = self.length
+        n_remaining_groups = len(groups_to_include)
+        remaining_length = self.length
 
-        # Draw samples from symbol groups that must be in the password.
-        while len(must_groups) > 0:
+        for group_settings in groups_to_include.values():
+            
+            # Draw a sample of symbols (with replacement).
+            n_remaining_groups -= 1
+            sample_source = group_settings['Symbols']
 
-            # Get the settings for this group..
-            group_name, sub_settings = must_groups.popitem()
-
-            # Count the minimum number of symbols that should be
-            # reserved for other symbol groups that must show up.
-            n_reserved_groups = len(must_groups)
-
-            # If the remaining available space is smaller than the
-            # number of symbols that should be reserved, raise an error.
-            if n_remaining <= n_reserved_groups:
-                raise ValueError(
-                    f'When generating symbols that should still be present '
-                    f'in the password, the number of symbol groups that should '
-                    f'still be present is {n_reserved_groups}, but the remaining length '
-                    f'available is {n_remaining}, which is supposed to be larger.'
-                )
-
-            # Draw random sample.
-            if (n_reserved_groups == 0) and (len(optional_groups) == 0):
-
-                # If there's no other symbol group to draw from, then
-                # the current symbol group in this loop must fill out
-                # the remaining space, so draw a random sample (with
-                # replacement) to fill it.
-                sub_sample = self.generator.choices(
-                    population = sub_settings['Symbols'],
-                    k = n_remaining
-                )
-
+            if len(sample_source) == 0:
+                continue
+            elif n_remaining_groups == 0:
+                draw_size = remaining_length
             else:
+                draw_size = self.generator.randrange(
+                    start = 1, 
+                    stop = remaining_length - n_remaining_groups
+                    )
 
-                # Otherwise, draw a sample with variable length,
-                # but reserve enough space for the other essential
-                # symbol groups.
-                sub_sample = _get_variable_length_sample(
-                    population = sub_settings['Symbols'],
-                    max_n = n_remaining - n_reserved_groups,
-                    mode = sub_settings['Include']
+            sub_sample = self.generator.choices(
+                population = group_settings['Symbols'],
+                k = draw_size,
                 )
+            
+            # Count the actual sample size in case the list of all symbols being drawn from is empty.
+            actual_sample_size = len(sub_sample)
 
-            # Include the sub-sample in the overall password.
+            # Update values.
             password.extend(sub_sample)
-
-            # Update n_remaining.
-            n_remaining = self.length - len(password)
-
-        # Draw samples from symbol groups that may or may not be in the password.
-        while (n_remaining > 0) and (len(optional_groups) > 0):
-
-            # Get the settings for this group.
-            group_name, sub_settings = optional_groups.popitem()
-
-            # Draw random sample.
-            if len(optional_groups) == 0:
-
-                # If there's no other symbol group to draw from, then
-                # the current symbol group in this loop must fill out
-                # the remaining space, so draw a random sample (with
-                # replacement) to fill it.
-                sub_sample = self.generator.choices(
-                    population = sub_settings['Symbols'],
-                    k = n_remaining
-                )
-
-            else:
-
-                # Otherwise, draw a sample with variable length.
-                sub_sample = _get_variable_length_sample(
-                    population = sub_settings['Symbols'],
-                    max_n = n_remaining,
-                    mode = sub_settings['Include']
-                )
-
-            # Include the sub-sample in the overall password.
-            password.extend(sub_sample)
-
-            # Update n_remaining.
-            n_remaining = self.length - len(password)
+            remaining_length -= actual_sample_size
 
         # ===== ===== ===== ===== ===== ===== ===== =====
         # Convert the password to a string.
         # ===== ===== ===== ===== ===== ===== ===== =====
 
-        # Randomly shuffle the order of the symbols in-place.
         self.generator.shuffle(password)
-
-        # Concatenate and return the password.
         password = ''.join(password)
 
         # ===== ===== ===== ===== ===== ===== ===== =====
