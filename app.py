@@ -1,10 +1,10 @@
 # This module is used to generate the web app for the password generator.
 # Created by Will Huang
-# Version == 1.0.0
+# Version == 2.0.0
 
 # Dependency versions
 # Python == 3.10.10
-# streamlit == 1.26.0
+# streamlit == 1.46.0
 # generator == 2.0.0
 
 # Imports
@@ -30,7 +30,10 @@ col1, col2, col3 = st.columns(3, gap = 'medium')
 def _get_generator():
     return PasswordGenerator()
 generator = _get_generator()
-password = ''
+
+# Make the password persist for the session.
+if "password" not in st.session_state:
+    st.session_state.password = ''
 
 # ===== ===== ===== ===== ===== ===== ===== =====
 # Password Options
@@ -137,7 +140,7 @@ with col2:
                      'they are all unique.]')
 
         # Check if special characters are provided when required.
-        elif (generator.include_special_characters == 'must') and len(custom_characters) == 0:
+        elif (generator.include_special_characters) and len(custom_characters) == 0:
             st.write(
                 ':red[Special symbols must be provided.]'
             )
@@ -157,8 +160,6 @@ with col2:
 # Generate password
 # ----- ----- ----- ----- ----- ----- ----- -----
 
-password = ''
-
 with col3:
 
     # Create a button for generating password.
@@ -167,6 +168,8 @@ with col3:
         key = 'generate_password',
         type = 'primary',
     )
+
+    st.text('Hover and click the mouse on the right to copy the password.')
 
     inclusion_list = [
         generator.include_upper_case,
@@ -187,8 +190,15 @@ with col3:
             st.write(f'The length ({generator.length}) is shorter than the minimum number of symbols that '
                      f'must show up ({n_must}).')
         elif pass_special_character:
-            password = generator.generate()
-            st.code(password, width = 300, wrap_lines = True)
+            st.session_state.password = generator.generate()
+            # st.code(password, width = 300, wrap_lines = True)
         elif not pass_special_character:
             st.write(':red[Please resolve the issues with special character settings and try again.]')
 
+    # Display the password.
+    st.code(
+        body = st.session_state.password,
+        width = 300, 
+        wrap_lines = True,
+        language = None,
+        )

@@ -1,5 +1,7 @@
 # Introduction
 
+![alt text](image.png)
+
 This is a simple web-based application that randomly generates passwords. You can specify criteria 
 such as password length and which symbols should appear. 
 
@@ -20,11 +22,7 @@ In a typical password, there are 4 groups of symbols:
 - Digits (from 0 to 9)
 - Special characters (i.e., characters not in the other groups above)
 
-In the app's interface, you can specify whether the generated password will contain symbols from these groups:
-
-- **Must include**: The password will include at least one symbol from this group.
-- **Never include**: The password will never include any symbol from this group.
-- **Randomly decide**: The password will randomly include any number of symbols from this group, possibly none at all.
+In the app's interface, you can specify "Yes" or "No" for whether the generated password will contain symbols from these groups.
 
 In case the required password contains / should not contain certain special characters in the default setting, 
 you can also provide your own custom set of special symbols.
@@ -37,11 +35,20 @@ This app strives to be simple, but some nice-to-have improvements are sought aft
 - Have a "Copy to Clipboard" button that copies the created password to the user's clipboard.
 - Keep the previously generated password even when changing the password custimization options. Currently, the interface would erase the previous password whenever you select a different customization option.
 
-**App Info**
-
-Version 1.0.0
+**App History**
 
 Created by Will Huang
+
+Version 1.0.0
+- Initial version
+
+Version 2.0.0
+- Updated the streamlit version used from 1.26.0 to 1.46.0.
+- Removed the option to randomly decide whether to include a group of symbols. Now the radio button options are either "Yes" or "No".
+- Changed the default password length to 20.
+- Added a button to copy the generated password. Also added texts in the interface to mention this feature.
+- Made the generated password persist even after changing the options. Previously, the password would disappear after changing the options.
+
 
 **License**
 
