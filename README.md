@@ -49,6 +49,8 @@ Version 2.0.0
 - Added a button to copy the generated password. Also added texts in the interface to mention this feature.
 - Made the generated password persist even after changing the options. Previously, the password would disappear after changing the options.
 
+Version 2.1.0
+- Changed the default setting to include special characters.
 
 **License**
 

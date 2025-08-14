@@ -95,7 +95,6 @@ with col2:
         options = ["Yes", "No"],
         help = 'This option determines whether special characters other than '
                'English letters and digits should be included in the password.',
-        index = 1,
     )
 
     # Update the generator.
